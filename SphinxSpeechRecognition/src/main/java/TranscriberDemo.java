@@ -7,6 +7,14 @@ import edu.cmu.sphinx.api.LiveSpeechRecognizer;
 import edu.cmu.sphinx.api.SpeechResult;
 import edu.cmu.sphinx.api.StreamSpeechRecognizer;
 
+
+/*
+http://www.speech.cs.cmu.edu/tools/lmtool-new.html
+https://cmusphinx.github.io/wiki/tutoriallm/
+
+
+ */
+
 public class TranscriberDemo {
 
     public static void main(String[] args) throws Exception {
@@ -37,8 +45,8 @@ public class TranscriberDemo {
         Configuration configuration = new Configuration();
 //
         configuration.setAcousticModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us");
-        configuration.setDictionaryPath("2208.dic");//"resource:/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict");
-        configuration.setLanguageModelPath("2208.lm");//"resource:/edu/cmu/sphinx/models/en-us/en-us.lm.bin");
+        configuration.setDictionaryPath("6797.dic");//"resource:/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict");
+        configuration.setLanguageModelPath("6797.lm");//"resource:/edu/cmu/sphinx/models/en-us/en-us.lm.bin");
 
 
         LiveSpeechRecognizer recognizer = new LiveSpeechRecognizer(configuration);
@@ -46,31 +54,36 @@ public class TranscriberDemo {
         recognizer.startRecognition(true);
         System.out.println("Made it to starting speech recognition... Started listening.... ");
         SpeechResult result;
-        System.out.println("it got the results... ");
+        //System.out.println("it got the results... ");
         result = recognizer.getResult();
 
-        recognizer.stopRecognition();
-        System.out.println(result.getHypothesis());
 
-        String [] testStrings = {"play music", "Mac volume down",
-                "Mac open Spotify","Mac Pause music",
-                "Mac skip song","Mac replay", "Mac spread",
-                "Mac volume up","play song"
-
-        };
-
-        for(String test : testStrings) {
-            new CommandFactory().setCommand(test.substring(4, test.length()));
+        //System.out.println(result.getHypothesis());
+        while ((!(result = recognizer.getResult()).equals("MAC QUIT"))) {
+            //Get the recognize speech
+            String command = result.getHypothesis();
+            System.out.println("Results: " + command);
+            if(command.length()>4)
+            new CommandFactory().setCommand(command.substring(4, command.length()));
         }
+
+        recognizer.stopRecognition();
+//
+//        String [] testStrings = {"play music", "Mac volume down",
+//                "Mac open Spotify","Mac Pause music",
+//                "Mac skip song","Mac replay", "Mac spread",
+//                "Mac volume up","play song"
+//
+//        };
+//
+//        for(String test : testStrings) {
+//            new CommandFactory().setCommand(test.substring(4, test.length()));
+//        }
        // new CommandFactory().setCommand(result.getHypothesis());
 
 
 
-//        while ((!(result = recognizer.getResult()).equals("mac quit"))) {
-//        //Get the recognize speech
-//        String command = result.getHypothesis();
-//            System.out.println("Results: " + command);
-//    }
+
         // Pause recognition process. It can be resumed then with startRecognition(false).
 
     }
