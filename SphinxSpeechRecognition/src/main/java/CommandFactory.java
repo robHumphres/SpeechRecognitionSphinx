@@ -18,7 +18,13 @@ public class CommandFactory {
     };
 
     protected static final String [] openCommandType = {
-            "open spotify", "appium", "android studios"
+            "open spotify", //0
+            "android studios",//1
+            "mac open appium",//2
+            "mac open eclipse",//3
+            "mac open github",//4
+            "mac open mongodb",//5
+            "mac open spotify"//6
     };
 
     protected static String command;
