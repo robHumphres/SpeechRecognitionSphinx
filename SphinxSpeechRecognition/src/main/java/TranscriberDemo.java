@@ -1,9 +1,3 @@
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-
 import edu.cmu.sphinx.api.Configuration;
 import edu.cmu.sphinx.api.LiveSpeechRecognizer;
 import edu.cmu.sphinx.api.SpeechResult;
@@ -30,40 +24,38 @@ public class TranscriberDemo {
 
 
         LiveSpeechRecognizer recognizer = new LiveSpeechRecognizer(configuration);
+
         // Start recognition process pruning previously cached data.
         recognizer.startRecognition(true);
         System.out.println("Made it to starting speech recognition... Started listening.... ");
         SpeechResult result;
-        //System.out.println("it got the results... ");
+
+        //get results from speech
         result = recognizer.getResult();
 
-
-
+        //What it thinks i said
         System.out.println(result.getHypothesis());
+
+
         while ((!(result = recognizer.getResult()).equals("MAC QUIT"))) {
             //Get the recognize speech
+
+            //Stop after gets result
+            recognizer.startRecognition(false);
+
             String command = result.getHypothesis();
+
             if(result.equals("MAC QUIT"))
                 break;
+
             System.out.println("Results: " + command);
             if(command.length()>4)
-            new CommandFactory().setCommand(command.substring(4, command.length()));
+                if(command.contains("MAC"))
+                    new CommandFactory().setCommand(command.substring(4, command.length()));
+
+            //After it tries to go through cmd
+            recognizer.startRecognition(true);
         }
-
-//        recognizer.stopRecognition();
-//
-//        String [] testStrings = {"play music", "Mac volume down",
-//                "Mac open Spotify","Mac Pause music",
-//                "Mac skip song","Mac replay", "Mac spread",
-//                "Mac volume up","play song"
-//
-//        };
-//
-//        for(String test : testStrings) {
-//            new CommandFactory().setCommand(test.substring(4, test.length()));
-//        }
-       // new CommandFactory().setCommand(result.getHypothesis());
-
 
 
 
